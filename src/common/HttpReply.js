@@ -9,7 +9,7 @@ let { httpServer } = LLOneBotConfig;
 /**
  * 发送信息
  * @param {Number} userId QQ
- * @param {Array[Message]} message 信息
+ * @param {Array<Message>} message 信息
  * @param {Number} groupId 群号, 没有则私发
  * @param {Boolean} autoEscape 
  */
@@ -48,7 +48,7 @@ function sendTextMsg(userId, text, groupId, autoEscape = false) {
 /**
  * 回复信息
  * @param {Object} msg 收到的信息
- * @param {Array[Message] | String} message 回复的信息
+ * @param {Array<Message> | String} message 回复的信息
  */
 function replyMsg(msg, message) {
     if (msg && msg.user_id) {
