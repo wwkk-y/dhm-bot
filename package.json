@@ -1,0 +1,19 @@
+{
+  "name": "dhm-bot",
+  "version": "1.0.0",
+  "description": "a qq bot base LLOneBot",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node app.js"
+  },
+  "author": "dhm",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "chalk": "^5.3.0"
+  },
+  "type": "module",
+  "devDependencies": {
+    "eslint": "^9.3.0"
+  }
+}
