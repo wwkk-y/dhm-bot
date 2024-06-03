@@ -111,8 +111,8 @@ function subContentContainR(content, func, topicObj = {}){
 /**
  * 
  * @param {String | Array<String>} content 
- * @param {*} func 
- * @param {*} topicObj 
+ * @param {Function} func 
+ * @param {Object} topicObj 
  */
 function subContentR(content, func, topicObj = {}){
     subContent(content, msg => reply.replyMsg(msg, func(msg)), topicObj)
