@@ -1,18 +1,17 @@
 import {sub} from "../common/PubSubObj.js";
+import reply from "../common/reply.js";
+import Message from "../common/message/Message.js";
 
 /**
- * 订阅 内容
- * @param {Object} topicObj
- *  必须包含.content属性
- *      为字符串时, 做为content
- *      为数组时, 每一个content都绑定 
+ * 订阅内容
+ * @param {String | Array} content 
  * @param {Function} func 
+ * @param {Object} topicObj 
  */
-function subContent(topicObj, func){
-    if(!topicObj.content){
+function subContent(content, func, topicObj = {}){
+    if(!content){
         throw new Error("content 不能为空");
     }
-    let content = topicObj.content;
 
     if(content instanceof Object){
         for(let c of content){
@@ -21,18 +20,19 @@ function subContent(topicObj, func){
             sub(to, func);
         }
     } else{
+        topicObj.content = content;
         sub(topicObj, func);
     }
 }
 
 /**
- * 订阅 前缀, 当 content 满足前缀为 prefix 时执行func
- * @param {Object} topicObj
- *  必须包含prefix 
+ * 订阅 前缀, 当 content 满足前缀为 prefix 时执行 func
+ * @param {String} prefix 
  * @param {Function} func 
+ * @param {Object} topicObj 
  */
-function subPrefix(topicObj, func){
-    if(!topicObj.prefix){
+function subPrefix(prefix, func, topicObj = {}){
+    if(!prefix){
         throw new Error("prefix 不能为空");
     }
 
@@ -44,19 +44,15 @@ function subPrefix(topicObj, func){
 }
 
 /**
- * 订阅内容包含
- * @param {Object} topicObj 
- * 必须包含.content属性
- *      为字符串时, 做为content
- *      为数组时, 每一个content都绑定 
+ * 订阅内容包含 content 的
+ * @param {String | Array} content
  * @param {Function} func 
+ * @param {Object} topicObj 
  */
-function subContentContain(topicObj, func){
-    if(!topicObj.content){
+function subContentContain(content, func, topicObj){
+    if(!content){
         throw new Error("content 不能为空");
     }
-    let content = topicObj.content;
-    delete topicObj.content;
 
     if(content instanceof Object){
         sub(topicObj, (msg) => {
@@ -78,4 +74,19 @@ function subContentContain(topicObj, func){
     }
 }
 
-export default {subContent, subPrefix, subContentContain}
+/**
+ * 订阅并回复
+ * @param {Object} topicObj 
+ * @param {Function} func 返回值为 Array[Message] | string
+ */
+function subAndReply(topicObj, func){
+    sub(topicObj, (msg) => {
+        let message = func(msg);
+        reply.replyMsg(msg, message);
+    })
+}
+
+export default {
+    subContent, subPrefix, subContentContain, 
+    subAndReply,
+};
