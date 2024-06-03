@@ -42,7 +42,6 @@ const server = http.createServer((req, res) => {
         req.on('end', () => {
             // 打印请求的内容
             // console.log(`请求内容: ${body}`);
-			// TODO 处理body
 			analysis(JSON.parse(body));
 			
             // 响应给客户端
