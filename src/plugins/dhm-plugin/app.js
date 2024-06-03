@@ -14,3 +14,7 @@ MsgSubUtil.subContent(['你好', '你好呀'], (msg) => {
 MsgSubUtil.subPrefix("#", (msg) => {
     reply.sendTextMsg(msg.user_id, "收到指令: " + msg.content)
 })
+
+MsgSubUtil.subAndReply({content: "#"}, (msg) => {
+    return "2:" + msg.content;
+})

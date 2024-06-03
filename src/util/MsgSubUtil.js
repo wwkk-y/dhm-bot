@@ -1,4 +1,5 @@
 import {sub} from "../common/PubSubObj.js";
+import reply from "../common/reply.js";
 
 /**
  * 订阅内容
@@ -72,4 +73,31 @@ function subContentContain(content, func, topicObj){
     }
 }
 
-export default {subContent, subPrefix, subContentContain}
+/**
+ * 订阅并回复
+ * @param {Object} topicObj 
+ * @param {Function} func 返回值为 message 
+ */
+function subAndReply(topicObj, func){
+    sub(topicObj, (msg) => {
+        let message = func(msg);
+        reply.replyMsg(msg, message);
+    })
+}
+
+/**
+ * 订阅并回复文本
+ * @param {Object} topicObj 
+ * @param {Function} func 返回值为 string
+ */
+function subAndReplyText(topicObj, func){
+    sub(topicObj, (msg) => {
+        let text = func(msg);
+        reply.replyTextMsg(msg, text);
+    })
+}
+
+export default {
+    subContent, subPrefix, subContentContain, 
+    subAndReply, subAndReplyText,
+};
