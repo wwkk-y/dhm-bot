@@ -7,8 +7,8 @@ MsgSubUtil.subContentContain({content: '你好', atMe: true, message_type: 'grou
     reply.sendMsg(msg.user_id, [new At(msg.user_id), new Text(" 你好, 我是dhm-bot, 很高兴认识你")], msg.group_id)
 })
 
-MsgSubUtil.subContent({content: ['你好', '你好呀'], message_type: "private"}, (msg) => {
-    reply.sendTextMsg(msg.user_id, "你好, 我是dhm-bot, 很高兴认识你")
+MsgSubUtil.subContent({content: ['你好', '你好呀']}, (msg) => {
+    reply.replyTextMsg(msg, "你好, 我是dhm-bot, 很高兴认识你")
 })
 
 MsgSubUtil.subPrefix({prefix: '#'}, (msg) => {
