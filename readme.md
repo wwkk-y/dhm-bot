@@ -38,7 +38,7 @@ pnpm i
 ### 编写 plugin 步骤
 
 * 在 src/plugins/ 里建立一个新的 plugin 包, 写一个主程序js文件
-* 在 src/plugins/index.js 下 import 主程序 js 文件
+* 修改 src/plugins/config.js, 在 plugins 里添加 主程序 js 文件
 
 ```js
 // test-plugin/app.js
@@ -50,5 +50,7 @@ MsgSubUtil.subPrefixAndReply("#", (msg) => {
 ```
 
 ```js
-import('./test-plugin/app.js')
+export default {
+    plugins: ["./dhm-plugin/app.js"]
+}
 ```

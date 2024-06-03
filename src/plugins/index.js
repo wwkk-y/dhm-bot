@@ -1,1 +1,5 @@
-import('./dhm-plugin/app.js')
+import config from "./config.js";
+
+config.plugins.forEach(plugin => {
+    import(plugin);
+})
