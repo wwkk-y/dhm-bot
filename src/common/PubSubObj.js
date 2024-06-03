@@ -64,7 +64,7 @@ let pub = (topicObj, ...args) => {
  * @param {Function} func 
  */
 let sub = (topicObj, func) => {
-    subTopicObjs.push(topicObj);
+    subTopicObjs.push({...topicObj});
     subFuncs.push(func);
 }
 
