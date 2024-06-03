@@ -20,8 +20,8 @@ function subContent(content, func, topicObj = {}){
             sub(to, func);
         }
     } else{
-        topicObj.content = content;
-        sub(topicObj, func);
+        let to = {...topicObj, content};
+        sub(to, func);
     }
 }
 

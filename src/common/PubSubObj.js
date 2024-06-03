@@ -19,6 +19,8 @@
  *  }
  */
 
+import { actionLogger } from "../util/logger.js";
+
 let subTopicObjs = ["topic.0.0.0"];
 let subFuncs = [() => console.log("topic.0.0.0")];
 
@@ -66,8 +68,12 @@ let sub = (topicObj, func) => {
     subFuncs.push(func);
 }
 
-export { pub, sub }
+function getSubTopicObjs(){
+    return [...subTopicObjs];
+}
+
+export { pub, sub, getSubTopicObjs }
 
 export default {
-    pub, sub
+    pub, sub, getSubTopicObjs
 }
