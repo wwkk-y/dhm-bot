@@ -1,5 +1,6 @@
 import {sub} from "../common/PubSubObj.js";
 import reply from "../common/reply.js";
+import Message from "../common/message/Message.js";
 
 /**
  * 订阅内容
@@ -76,7 +77,7 @@ function subContentContain(content, func, topicObj){
 /**
  * 订阅并回复
  * @param {Object} topicObj 
- * @param {Function} func 返回值为 message | string
+ * @param {Function} func 返回值为 Array[Message] | string
  */
 function subAndReply(topicObj, func){
     sub(topicObj, (msg) => {
