@@ -44,13 +44,13 @@ pnpm i
 // test-plugin/app.js
 import MsgSubUtil from '../../util/MsgSubUtil.js'
 
-MsgSubUtil.subR("#", (msg) => {
-    return "收到指令:" + msg.content;
+MsgSubUtil.subPrefixR("#", (msg) => {
+    return "收到指令: " + msg.content;
 })
 ```
 
 ```js
 export default {
-    plugins: ["./dhm-plugin/app.js"]
+    plugins: ["./test-plugin/app.js"]
 }
 ```
