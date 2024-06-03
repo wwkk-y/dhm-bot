@@ -46,23 +46,18 @@ function sendTextMsg(userId, text, groupId, autoEscape=false) {
 
 /**
  * 回复信息
- * @param {Object} msg 
- * @param {Object} message 
+ * @param {Object} msg 收到的信息
+ * @param {Object | String} message 回复的信息
  */
 function replyMsg(msg, message){
     if(msg && msg.user_id){
-        sendMsg(msg.user_id, message, msg.group_id);
+        if(typeof(message) === "string"){
+            replyMsg(msg, new Text(message));
+        } else{
+            sendMsg(msg.user_id, message, msg.group_id);
+        }
     }
 }
 
-/**
- * 回复文字信息
- * @param {Object} msg 
- * @param {String} text 
- */
-function replyTextMsg(msg, text){
-    replyMsg(msg, new Text(text));
-}
 
-
-export default {sendTextMsg, sendMsg, replyMsg, replyTextMsg}
+export default {sendTextMsg, sendMsg, replyMsg}

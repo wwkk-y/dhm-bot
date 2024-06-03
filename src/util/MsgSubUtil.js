@@ -76,7 +76,7 @@ function subContentContain(content, func, topicObj){
 /**
  * 订阅并回复
  * @param {Object} topicObj 
- * @param {Function} func 返回值为 message 
+ * @param {Function} func 返回值为 message | string
  */
 function subAndReply(topicObj, func){
     sub(topicObj, (msg) => {
@@ -85,19 +85,7 @@ function subAndReply(topicObj, func){
     })
 }
 
-/**
- * 订阅并回复文本
- * @param {Object} topicObj 
- * @param {Function} func 返回值为 string
- */
-function subAndReplyText(topicObj, func){
-    sub(topicObj, (msg) => {
-        let text = func(msg);
-        reply.replyTextMsg(msg, text);
-    })
-}
-
 export default {
     subContent, subPrefix, subContentContain, 
-    subAndReply, subAndReplyText,
+    subAndReply,
 };
