@@ -20,6 +20,7 @@ function subContent(content, func, topicObj = {}){
             sub(to, func);
         }
     } else{
+        // 不应该修改对象参数
         let to = {...topicObj, content};
         sub(to, func);
     }
