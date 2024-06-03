@@ -120,5 +120,5 @@ function subContentR(content, func, topicObj = {}){
 
 export default {
     subContent, subPrefix, subContentContain, 
-    subR, subPrefixR, subContentContainR,
+    subR, subPrefixR, subContentContainR, subContentR,
 };
