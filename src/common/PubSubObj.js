@@ -18,8 +18,6 @@
  *      key2: val2
  *  }
  */
-import logger from '../util/logger.js'
-import { actionLogger } from '../util/logger.js';
 
 let subTopicObjs = ["topic.0.0.0"];
 let subFuncs = [() => console.log("topic.0.0.0")];
