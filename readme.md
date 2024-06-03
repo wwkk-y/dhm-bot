@@ -44,7 +44,7 @@ pnpm i
 // test-plugin/app.js
 import MsgSubUtil from '../../util/MsgSubUtil.js'
 
-MsgSubUtil.subPrefixAndReply("#", (msg) => {
+MsgSubUtil.subR("#", (msg) => {
     return "收到指令:" + msg.content;
 })
 ```

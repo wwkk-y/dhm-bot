@@ -15,6 +15,6 @@ MsgSubUtil.subContent(['你好', '你好呀'], (msg) => {
     reply.replyMsg(msg, "你好, 我是dhm-bot, 很高兴认识你")
 })
 
-MsgSubUtil.subAndReply({content: "#"}, (msg) => {
+MsgSubUtil.subR({content: "#"}, (msg) => {
     return "2:" + msg.content;
 })
