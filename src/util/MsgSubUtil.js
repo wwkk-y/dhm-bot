@@ -36,6 +36,9 @@ function subPrefix(topicObj, func){
         throw new Error("prefix 不能为空");
     }
 
+    let prefix = topicObj.prefix;
+    delete topicObj.prefix;
+
     sub(topicObj, (msg) => {
         if(msg.content && msg.content.startsWith(prefix)){
             func(msg);

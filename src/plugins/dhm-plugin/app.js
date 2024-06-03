@@ -10,3 +10,7 @@ MsgSubUtil.subContentContain({content: '你好', atMe: true, message_type: 'grou
 MsgSubUtil.subContent({content: ['你好', '你好呀'], message_type: "private"}, (msg) => {
     reply.sendTextMsg(msg.user_id, "你好, 我是dhm-bot, 很高兴认识你")
 })
+
+MsgSubUtil.subPrefix({prefix: '#'}, (msg) => {
+    reply.sendTextMsg(msg.user_id, "收到指令: " + msg.content)
+})
