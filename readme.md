@@ -58,3 +58,7 @@ export default {
     plugins: ["./test-plugin/app.js"]
 }
 ```
+
+## TODO
+
+* 参数校验
