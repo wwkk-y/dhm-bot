@@ -77,7 +77,7 @@ function subContentContain(content, func, topicObj){
 /**
  * 订阅并回复
  * @param {Object} topicObj 
- * @param {Function} func 返回值为 Array[Message] | string
+ * @param {Function} func 返回值为 Array<Message> | string
  */
 function subR(topicObj, func){
     sub(topicObj, (msg) => {
