@@ -1,4 +1,4 @@
-import {sub} from "../common/PubSubObj.js";
+import { sub } from "../common/PubSubObj.js";
 import reply from "../common/reply.js";
 import Message from "../common/message/Message.js";
 
@@ -8,20 +8,21 @@ import Message from "../common/message/Message.js";
  * @param {Function} func 
  * @param {Object} topicObj 
  */
-function subContent(content, func, topicObj = {}){
-    if(!content){
+function subContent(content, func, topicObj = {}) {
+    if (!content) {
         throw new Error("content 不能为空");
     }
 
-    if(content instanceof Object){
-        for(let c of content){
-            let to = {...topicObj};
+    if (content instanceof Object) {
+        for (let c of content) {
+            let to = { ...topicObj };
             to.content = c;
             sub(to, func);
         }
-    } else{
-        topicObj.content = content;
-        sub(topicObj, func);
+    } else {
+        // 不应该修改对象参数
+        let to = { ...topicObj, content };
+        sub(to, func);
     }
 }
 
@@ -31,13 +32,13 @@ function subContent(content, func, topicObj = {}){
  * @param {Function} func 
  * @param {Object} topicObj 
  */
-function subPrefix(prefix, func, topicObj = {}){
-    if(!prefix){
+function subPrefix(prefix, func, topicObj = {}) {
+    if (!prefix) {
         throw new Error("prefix 不能为空");
     }
 
     sub(topicObj, (msg) => {
-        if(msg.content && msg.content.startsWith(prefix)){
+        if (msg.content && msg.content.startsWith(prefix)) {
             func(msg);
         }
     })
@@ -49,25 +50,25 @@ function subPrefix(prefix, func, topicObj = {}){
  * @param {Function} func 
  * @param {Object} topicObj 
  */
-function subContentContain(content, func, topicObj){
-    if(!content){
+function subContentContain(content, func, topicObj) {
+    if (!content) {
         throw new Error("content 不能为空");
     }
 
-    if(content instanceof Object){
+    if (content instanceof Object) {
         sub(topicObj, (msg) => {
-            if(msg.content){
-                for(let c of content){
-                    if(msg.content.includes(c)){
+            if (msg.content) {
+                for (let c of content) {
+                    if (msg.content.includes(c)) {
                         func(msg);
                     }
                 }
             }
         });
 
-    } else{
+    } else {
         sub(topicObj, (msg) => {
-            if(msg.content && msg.content.includes(content)){
+            if (msg.content && msg.content.includes(content)) {
                 func(msg);
             }
         });
@@ -79,10 +80,12 @@ function subContentContain(content, func, topicObj){
  * @param {Object} topicObj 
  * @param {Function} func 返回值为 Array<Message> | string
  */
-function subR(topicObj, func){
+function subR(topicObj, func) {
     sub(topicObj, (msg) => {
         let message = func(msg);
-        reply.replyMsg(msg, message);
+        if (message !== undefined) {
+            reply.replyMsg(msg, message);
+        }
     })
 }
 
@@ -92,9 +95,12 @@ function subR(topicObj, func){
  * @param {Function} func 
  * @param {Object} topicObj 
  */
-function subPrefixR(prefix, func, topicObj = {}){
+function subPrefixR(prefix, func, topicObj = {}) {
     subPrefix(prefix, (msg) => {
-        reply.replyMsg(msg, func(msg))
+        let message = func(msg);
+        if (message !== undefined) {
+            reply.replyMsg(msg, message);
+        }
     }, topicObj);
 }
 
@@ -104,8 +110,13 @@ function subPrefixR(prefix, func, topicObj = {}){
  * @param {Function} func 
  * @param {Object} topicObj 
  */
-function subContentContainR(content, func, topicObj = {}){
-    subContentContain(content, msg => reply.replyMsg(msg, func(msg)), topicObj);
+function subContentContainR(content, func, topicObj = {}) {
+    subContentContain(content, (msg) => {
+        let message = func(msg);
+        if (message !== undefined) {
+            reply.replyMsg(msg, message);
+        }
+    }, topicObj);
 }
 
 /**
@@ -114,11 +125,16 @@ function subContentContainR(content, func, topicObj = {}){
  * @param {Function} func 
  * @param {Object} topicObj 
  */
-function subContentR(content, func, topicObj = {}){
-    subContent(content, msg => reply.replyMsg(msg, func(msg)), topicObj)
+function subContentR(content, func, topicObj = {}) {
+    subContent(content, (msg) => {
+        let message = func(msg);
+        if (message !== undefined) {
+            reply.replyMsg(msg, message);
+        }
+    }, topicObj)
 }
 
 export default {
-    subContent, subPrefix, subContentContain, 
-    subR, subPrefixR, subContentContainR,
+    subContent, subPrefix, subContentContain,
+    subR, subPrefixR, subContentContainR, subContentR,
 };
