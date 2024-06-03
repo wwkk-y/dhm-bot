@@ -24,8 +24,12 @@ pnpm i
 
 订阅内容: 
 
+* [上报消息](https://docs.go-cqhttp.org/event/#%E6%89%80%E6%9C%89%E4%B8%8A%E6%8A%A5)
+* [消息类型](https://docs.go-cqhttp.org/cqcode/#%E8%BD%AC%E4%B9%89)
+
 ```js
 {
+    ...msg, // msg详见上报消息
     content: "内容", // 检测 文本消息内容 (指令)
     atMe: true, // 是否 at 自己
 }
@@ -35,6 +39,15 @@ pnpm i
 
 * 在 src/plugins/ 里建立一个新的 plugin 包, 写一个主程序js文件
 * 在 src/plugins/index.js 下 import 主程序 js 文件
+
+```js
+// test-plugin/app.js
+import MsgSubUtil from '../../util/MsgSubUtil.js'
+
+MsgSubUtil.subPrefixAndReply("#", (msg) => {
+    return "收到指令:" + msg.content;
+})
+```
 
 ```js
 import('./test-plugin/app.js')
