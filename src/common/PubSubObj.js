@@ -28,12 +28,15 @@ let subFuncs = [() => console.log("topic.0.0.0")];
  * 判断 source 的每一个属性的值是不是等于 target 该属性对应的值
  * @param {Object} source 
  * @param {Object} target 
+ * @param {Number} depth 比较深度
  * @returns bool
  */
-function isObjFeildAllEqual(source, target) {
+function isObjFeildAllEqual(source, target, depth = 10) {
+    if(depth === 0) return true;
+
     if (source instanceof Object && target instanceof Object) {
         for (let key in source) {
-            if (!isObjFeildAllEqual(source[key], target[key])) {
+            if (!isObjFeildAllEqual(source[key], target[key], depth - 1)) {
                 return false;
             }
         }
