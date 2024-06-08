@@ -18,9 +18,8 @@ MsgSubUtil.subPrefixR("#topic", (msg) => {
         if(arg1 === '-detail'){
             return JSON.stringify(PubSubObj.getSubTopicObjs(), null, 4);
         }
-    } else{
-        return JSON.stringify(PubSubObj.getSubTopics(), null, 4);
-    }
+    } 
+    return JSON.stringify(PubSubObj.getSubTopics(), null, 4);
 })
 
 import ("./game.js")
