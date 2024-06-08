@@ -19,7 +19,7 @@ let gameLogic = (msg) => {
     if(gameing[msg.user_id] !== false){
         let gameRst = gameMenu[gameing[msg.user_id]](msg)
         if(gameRst !== undefined){
-            return `${gameRst}\n输入'#结束游戏'结束游戏`;
+            return `${gameRst}\n@我 结束游戏,即可结束游戏`;
         }
     }
 }
@@ -34,7 +34,7 @@ MsgSubUtil.subContentR(["石头剪刀布", " 石头剪刀布"], (msg) => {
         gameing[msg.user_id] = "石头剪刀布"
         return [new At(msg.user_id), new Text('好的, 我们开始游戏')]
     } else {
-        return [new At(msg.user_id), new Text(`你正在进行游戏: ${gameing[msg.user_id]}还未结束, 输入 #结束游戏 可以结束游戏`)]
+        return [new At(msg.user_id), new Text(`你正在进行游戏: ${gameing[msg.user_id]}还未结束, @我 结束游戏 可以结束游戏`)]
     }
 
 }, {atMe: true})
