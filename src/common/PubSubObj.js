@@ -103,7 +103,7 @@ let unSub = (id) => {
 }
 
 function getSubTopicObjs(){
-    return [...subTopicObjs];
+    return [...subTopicObjs.map(to => to.topic)];
 }
 
 export { pub, sub, getSubTopicObjs, unSub }
