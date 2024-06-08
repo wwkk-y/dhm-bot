@@ -7,22 +7,25 @@ import Message from "../common/message/Message.js";
  * @param {String | Array<String>} content 
  * @param {Function} func 
  * @param {Object} topicObj 
+ * @returns {String | Array<String> } 订阅的唯一ID
  */
 function subContent(content, func, topicObj = {}) {
     if (!content) {
         throw new Error("content 不能为空");
     }
 
-    if (content instanceof Object) {
+    if (content instanceof Array) {
+        let uniqueIds = []
         for (let c of content) {
             let to = { ...topicObj };
             to.content = c;
-            sub(to, func);
+            uniqueIds.push(sub(to, func, {subContent: content}));
         }
+        return uniqueIds;
     } else {
         // 不应该修改对象参数
         let to = { ...topicObj, content };
-        sub(to, func);
+        return sub(to, func);
     }
 }
 
@@ -31,17 +34,18 @@ function subContent(content, func, topicObj = {}) {
  * @param {String} prefix 
  * @param {Function} func 
  * @param {Object} topicObj 
+ * @returns {String} 订阅的唯一ID
  */
 function subPrefix(prefix, func, topicObj = {}) {
     if (!prefix) {
         throw new Error("prefix 不能为空");
     }
-
-    sub(topicObj, (msg) => {
+    let to = {...topicObj};
+    return sub(to, (msg) => {
         if (msg.content && msg.content.startsWith(prefix)) {
             func(msg);
         }
-    })
+    }, {subPrefix: prefix})
 }
 
 /**
@@ -49,13 +53,14 @@ function subPrefix(prefix, func, topicObj = {}) {
  * @param {String | Array<String>} content
  * @param {Function} func 
  * @param {Object} topicObj 
+ * @returns {String} 订阅的唯一ID
  */
 function subContentContain(content, func, topicObj) {
     if (!content) {
         throw new Error("content 不能为空");
     }
-
-    if (content instanceof Object) {
+    topicObj = {...topicObj};
+    if (content instanceof Array) {
         sub(topicObj, (msg) => {
             if (msg.content) {
                 for (let c of content) {
@@ -64,14 +69,14 @@ function subContentContain(content, func, topicObj) {
                     }
                 }
             }
-        });
+        }, {subContentContain: content});
 
     } else {
         sub(topicObj, (msg) => {
             if (msg.content && msg.content.includes(content)) {
                 func(msg);
             }
-        });
+        }, {subContentContain: content});
     }
 }
 
@@ -79,14 +84,16 @@ function subContentContain(content, func, topicObj) {
  * 订阅并回复
  * @param {Object} topicObj 
  * @param {Function} func 返回值为 Array<Message> | string
+ * @param {Object} comment 
+ * @returns {String} 订阅的唯一ID
  */
-function subR(topicObj, func) {
+function subR(topicObj, func, comment) {
     sub(topicObj, (msg) => {
         let message = func(msg);
         if (message !== undefined) {
             reply.replyMsg(msg, message);
         }
-    })
+    }, comment)
 }
 
 /**
@@ -94,6 +101,7 @@ function subR(topicObj, func) {
  * @param {String} prefix 
  * @param {Function} func 
  * @param {Object} topicObj 
+ * @returns {String} 订阅的唯一ID
  */
 function subPrefixR(prefix, func, topicObj = {}) {
     subPrefix(prefix, (msg) => {
@@ -109,6 +117,7 @@ function subPrefixR(prefix, func, topicObj = {}) {
  * @param {String | Array<String>} content 
  * @param {Function} func 
  * @param {Object} topicObj 
+ * @returns {String} 订阅的唯一ID
  */
 function subContentContainR(content, func, topicObj = {}) {
     subContentContain(content, (msg) => {
@@ -124,6 +133,7 @@ function subContentContainR(content, func, topicObj = {}) {
  * @param {String | Array<String>} content 
  * @param {Function} func 
  * @param {Object} topicObj 
+ * @returns {String} 订阅的唯一ID
  */
 function subContentR(content, func, topicObj = {}) {
     subContent(content, (msg) => {
