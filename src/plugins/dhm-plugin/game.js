@@ -24,7 +24,7 @@ let gameLogic = (msg) => {
     }
 }
 
-MsgSubUtil.subContentR("#石头剪刀布", (msg) => {
+MsgSubUtil.subContentR(["石头剪刀布", " 石头剪刀布"], (msg) => {
     if (!(msg.user_id in gameing)) {
         // init
         gameing[msg.user_id] = false
@@ -37,9 +37,9 @@ MsgSubUtil.subContentR("#石头剪刀布", (msg) => {
         return [new At(msg.user_id), new Text(`你正在进行游戏: ${gameing[msg.user_id]}还未结束, 输入 #结束游戏 可以结束游戏`)]
     }
 
-})
+}, {atMe: true})
 
-MsgSubUtil.subContentR("#结束游戏", (msg) => {
+MsgSubUtil.subContentR(["结束游戏", " 结束游戏"], (msg) => {
     gameing[msg.user_id] = false;
     return "好的, 我们不玩了";
-})
+}, {atMe: true})
