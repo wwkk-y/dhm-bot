@@ -45,7 +45,9 @@ function isObjFeildAllEqual(source, target, depth = 1) {
                 }
             } else{
                 // 不为对象时直接比较值
-                return source[key] === target[key];
+                if(source[key] !== target[key]){
+                    return false;
+                }
             }
         }
         return true;
@@ -79,7 +81,7 @@ let pub = (topicObj, ...args) => {
  */
 let sub = (topicObj, func, comment) => {
     let to = {
-        topic: {...JSON.stringify(JSON.parse(topicObj))}, // 需要持久化保存 clone一份 不能受外部影响
+        topic: {...JSON.parse(JSON.stringify(topicObj))}, // 需要持久化保存 clone一份 不能受外部影响
         id: uuidv4()
     }
     if(comment != undefined){
