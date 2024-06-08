@@ -24,6 +24,7 @@ import {v4 as uuidv4} from 'uuid'
 
 let subTopicObjs = [{topic: "topic.0.0.0"}];
 let subFuncs = [() => console.log("topic.0.0.0")];
+
 /**
  * 判断 source 的每一个属性的值是不是等于 target 该属性对应的值
  * @param {Object} source 
@@ -77,7 +78,10 @@ let pub = (topicObj, ...args) => {
  * @returns {String} id 订阅的唯一标识
  */
 let sub = (topicObj, func, comment) => {
-    let to = {topic: {...topicObj}, id: uuidv4()}
+    let to = {
+        topic: {...JSON.stringify(JSON.parse(topicObj))}, // 需要持久化保存 clone一份 不能受外部影响
+        id: uuidv4()
+    }
     if(comment != undefined){
         to['comment'] = comment;
     }
@@ -103,11 +107,19 @@ let unSub = (id) => {
 }
 
 function getSubTopicObjs(){
-    return [...subTopicObjs.map(to => to.topic)];
+    return subTopicObjs;
 }
 
-export { pub, sub, getSubTopicObjs, unSub }
+function getSubTopics(){
+    return subTopicObjs.map(to => to.topic)
+}
+
+export {
+    pub, sub , unSub,
+    getSubTopicObjs, getSubTopics
+};
 
 export default {
-    pub, sub, getSubTopicObjs, unSub
-}
+    pub, sub , unSub,
+    getSubTopicObjs, getSubTopics
+};

@@ -17,8 +17,7 @@ function subContent(content, func, topicObj = {}) {
     if (content instanceof Array) {
         let uniqueIds = []
         for (let c of content) {
-            let to = { ...topicObj };
-            to.content = c;
+            let to = { ...topicObj, content: c };
             uniqueIds.push(sub(to, func, {subContent: content}));
         }
         return uniqueIds;
@@ -40,8 +39,7 @@ function subPrefix(prefix, func, topicObj = {}) {
     if (!prefix) {
         throw new Error("prefix 不能为空");
     }
-    let to = {...topicObj};
-    return sub(to, (msg) => {
+    return sub(topicObj, (msg) => {
         if (msg.content && msg.content.startsWith(prefix)) {
             func(msg);
         }
@@ -59,7 +57,6 @@ function subContentContain(content, func, topicObj) {
     if (!content) {
         throw new Error("content 不能为空");
     }
-    topicObj = {...topicObj};
     if (content instanceof Array) {
         sub(topicObj, (msg) => {
             if (msg.content) {
