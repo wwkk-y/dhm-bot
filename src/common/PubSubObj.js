@@ -20,10 +20,11 @@
  */
 
 import { actionLogger } from "../util/logger.js";
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
-let subTopicObjs = [{topic: "topic.0.0.0"}];
+let subTopicObjs = [{ topic: "topic.0.0.0" }];
 let subFuncs = [() => console.log("topic.0.0.0")];
+
 /**
  * 判断 source 的每一个属性的值是不是等于 target 该属性对应的值
  * @param {Object} source 
@@ -32,19 +33,21 @@ let subFuncs = [() => console.log("topic.0.0.0")];
  * @returns {Boolean}
  */
 function isObjFeildAllEqual(source, target, depth = 1) {
-    if(depth === 0) return true;
+    if (depth === 0) return true;
 
     if (source instanceof Object && target instanceof Object) {
         // 为对象时比较属性
         for (let key in source) {
-            if(source[key] instanceof Object && target[key] instanceof Object){
+            if (source[key] instanceof Object && target[key] instanceof Object) {
                 // 为对象就递归继续比较
                 if (!isObjFeildAllEqual(source[key], target[key], depth - 1)) {
                     return false;
                 }
-            } else{
+            } else {
                 // 不为对象时直接比较值
-                return source[key] === target[key];
+                if (source[key] !== target[key]) {
+                    return false;
+                }
             }
         }
         return true;
@@ -77,8 +80,11 @@ let pub = (topicObj, ...args) => {
  * @returns {String} id 订阅的唯一标识
  */
 let sub = (topicObj, func, comment) => {
-    let to = {topic: {...topicObj}, id: uuidv4()}
-    if(comment != undefined){
+    let to = {
+        topic: { ...JSON.parse(JSON.stringify(topicObj)) }, // 需要持久化保存 clone一份 不能受外部影响
+        id: uuidv4()
+    }
+    if (comment != undefined) {
         to['comment'] = comment;
     }
     subTopicObjs.push(to);
@@ -87,12 +93,12 @@ let sub = (topicObj, func, comment) => {
 }
 
 /**
- * 取消订阅消息
+ * 取消对应id的订阅
  * @param {String} id 
  */
-let unSub = (id) => {
-    for(let i = 0; i < subTopicObjs.length; ++i){
-        if(subTopicObjs[i].id === id){
+function unSubOfId(id) {
+    for (let i = 0; i < subTopicObjs.length; ++i) {
+        if (subTopicObjs[i].id === id) {
             // 删除 subTopicObj
             // 删除 subFunc
             subTopicObjs.splice(i, 1);
@@ -102,12 +108,34 @@ let unSub = (id) => {
     }
 }
 
-function getSubTopicObjs(){
-    return [...subTopicObjs];
+/**
+ * 取消订阅消息
+ * @param {String | Array<String>} id 
+ */
+let unSub = (id) => {
+    if (id instanceof Array) {
+        for (let i of id) {
+            unSubOfId(i);
+        }
+    } else {
+        unSubOfId(id);
+    }
 }
 
-export { pub, sub, getSubTopicObjs, unSub }
+function getSubTopicObjs() {
+    return subTopicObjs;
+}
+
+function getSubTopics() {
+    return subTopicObjs.map(to => to.topic)
+}
+
+export {
+    pub, sub, unSub,
+    getSubTopicObjs, getSubTopics
+};
 
 export default {
-    pub, sub, getSubTopicObjs, unSub
-}
+    pub, sub, unSub,
+    getSubTopicObjs, getSubTopics
+};

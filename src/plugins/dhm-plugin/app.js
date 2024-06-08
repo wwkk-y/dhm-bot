@@ -11,8 +11,16 @@ MsgSubUtil.subContentR('你好', (msg) => {
     return "你好呀"
 }, { message_type: "private" })
 
-MsgSubUtil.subContentR("#topic", (msg) => {
-    return JSON.stringify(PubSubObj.getSubTopicObjs(), null, 4);
+MsgSubUtil.subPrefixR("#topic", (msg) => {
+    let args = msg.content.split(' ');
+    if(args.length === 2){
+        let arg1 = args[1];
+        if(arg1 === '-detail'){
+            return JSON.stringify(PubSubObj.getSubTopicObjs(), null, 4);
+        }
+    } else{
+        return JSON.stringify(PubSubObj.getSubTopics(), null, 4);
+    }
 })
 
 import ("./game.js")
