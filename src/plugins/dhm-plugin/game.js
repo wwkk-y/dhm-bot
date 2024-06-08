@@ -28,7 +28,7 @@ MsgSubUtil.subContentR("#石头剪刀布", (msg) => {
     if (!(msg.user_id in gameing)) {
         // init
         gameing[msg.user_id] = false
-        MsgSubUtil.subR({ user_id: msg.user_id }, gameLogic);
+        MsgSubUtil.subR({ user_id: msg.user_id }, gameLogic, {game: "石头剪刀布"});
     }
     if (gameing[msg.user_id] === false) {
         gameing[msg.user_id] = "石头剪刀布"

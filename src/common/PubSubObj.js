@@ -1,5 +1,5 @@
 /**
- * 实现一个基于对象主题的发布订阅者模型
+ * 实现一个基于对象主题的发布订阅者模型, 默认只比较一层
  * 举一个例子
  *  发布一个主题对象为
  *  {
@@ -20,28 +20,36 @@
  */
 
 import { actionLogger } from "../util/logger.js";
+import {v4 as uuidv4} from 'uuid'
 
-let subTopicObjs = ["topic.0.0.0"];
+let subTopicObjs = [{topic: "topic.0.0.0"}];
 let subFuncs = [() => console.log("topic.0.0.0")];
-
 /**
  * 判断 source 的每一个属性的值是不是等于 target 该属性对应的值
  * @param {Object} source 
  * @param {Object} target 
- * @param {Number} depth 比较深度
- * @returns bool
+ * @param {Number} depth 比较深度, 默认一层
+ * @returns {Boolean}
  */
-function isObjFeildAllEqual(source, target, depth = 10) {
+function isObjFeildAllEqual(source, target, depth = 1) {
     if(depth === 0) return true;
 
     if (source instanceof Object && target instanceof Object) {
+        // 为对象时比较属性
         for (let key in source) {
-            if (!isObjFeildAllEqual(source[key], target[key], depth - 1)) {
-                return false;
+            if(source[key] instanceof Object && target[key] instanceof Object){
+                // 为对象就递归继续比较
+                if (!isObjFeildAllEqual(source[key], target[key], depth - 1)) {
+                    return false;
+                }
+            } else{
+                // 不为对象时直接比较值
+                return source[key] === target[key];
             }
         }
         return true;
     } else {
+        // 不为对象时直接比较值
         return source === target;
     }
 }
@@ -54,7 +62,7 @@ function isObjFeildAllEqual(source, target, depth = 10) {
 let pub = (topicObj, ...args) => {
     for (let i = 0; i < subTopicObjs.length; ++i) {
         let subTopicObj = subTopicObjs[i];
-        if (isObjFeildAllEqual(subTopicObj, topicObj)) {
+        if (isObjFeildAllEqual(subTopicObj.topic, topicObj)) {
             let func = subFuncs[i];
             func(...args);
         }
@@ -65,18 +73,41 @@ let pub = (topicObj, ...args) => {
  * 订阅消息
  * @param {Object} topicObj
  * @param {Function} func 
+ * @param {Object} comment 注释
+ * @returns {String} id 订阅的唯一标识
  */
-let sub = (topicObj, func) => {
-    subTopicObjs.push({...topicObj});
+let sub = (topicObj, func, comment) => {
+    let to = {topic: {...topicObj}, id: uuidv4()}
+    if(comment != undefined){
+        to['comment'] = comment;
+    }
+    subTopicObjs.push(to);
     subFuncs.push(func);
+    return to.id;
+}
+
+/**
+ * 取消订阅消息
+ * @param {String} id 
+ */
+let unSub = (id) => {
+    for(let i = 0; i < subTopicObjs.length; ++i){
+        if(subTopicObjs[i].id === id){
+            // 删除 subTopicObj
+            // 删除 subFunc
+            subTopicObjs.splice(i, 1);
+            subFuncs.slice(i, 1);
+            break;
+        }
+    }
 }
 
 function getSubTopicObjs(){
     return [...subTopicObjs];
 }
 
-export { pub, sub, getSubTopicObjs }
+export { pub, sub, getSubTopicObjs, unSub }
 
 export default {
-    pub, sub, getSubTopicObjs
+    pub, sub, getSubTopicObjs, unSub
 }
